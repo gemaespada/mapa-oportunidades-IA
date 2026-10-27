@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mapa de Oportunidades con IA | Radar Global Público</title>
+  <meta name="description" content="Plataforma pública y colaborativa para detectar, publicar y explorar oportunidades de negocio y problemas urbanos solucionables con Inteligencia Artificial.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles.css">
+  
+  <!-- Supabase JS Client (v2) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <!-- Ambient background glow effects -->
+  <div class="glow-orb orb-1"></div>
+  <div class="glow-orb orb-2"></div>
+  <div class="glow-orb orb-3"></div>
+
+  <div class="app-layout">
+    <!-- Navbar / Header -->
+    <header class="main-header">
+      <div class="container header-content">
+        <div class="brand">
+          <div class="brand-badge">
+            <span class="live-indicator"></span>
+            <span>En vivo • Red Pública</span>
+          </div>
+          <div class="logo-group">
+            <div class="logo-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="2" y1="12" x2="22" y2="12"></line>
+                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+              </svg>
+            </div>
+            <div>
+              <h1 class="app-title">Mapa de Oportunidades con IA</h1>
+              <p class="app-subtitle">Radar global de retos urbanos y soluciones inteligentes detectadas en ciudades</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button id="btnOpenModal" class="btn btn-primary" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span>Publicar Oportunidad</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container main-container">
+      <!-- Metrics Dashboard -->
+      <section class="metrics-bar" aria-label="Estadísticas de la plataforma">
+        <div class="metric-card">
+          <div class="metric-icon metric-purple">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+          </div>
+          <div class="metric-data">
+            <span class="metric-value" id="statTotalOpportunities">0</span>
+            <span class="metric-label">Oportunidades</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon metric-cyan">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+          </div>
+          <div class="metric-data">
+            <span class="metric-value" id="statTotalCities">0</span>
+            <span class="metric-label">Ciudades conectadas</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon metric-emerald">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+          </div>
+          <div class="metric-data">
+            <span class="metric-value" id="statTotalCountries">0</span>
+            <span class="metric-label">Países</span>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-icon metric-rose">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+          </div>
+          <div class="metric-data">
+            <span class="metric-value" id="statTotalLikes">0</span>
+            <span class="metric-label">Votos / Likes</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Filters & Search Toolbar -->
+      <section class="filters-panel">
+        <div class="search-box">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="Buscar por idea, problema, solución o ciudad..." 
+            autocomplete="off"
+          >
+          <button id="clearSearchBtn" class="clear-btn" title="Limpiar búsqueda" style="display: none;">✕</button>
+        </div>
+
+        <div class="filter-controls">
+          <!-- Filter: Country -->
+          <div class="select-wrapper">
+            <label for="filterCountry" class="sr-only">País</label>
+            <select id="filterCountry">
+              <option value="">🌍 Todos los países</option>
+            </select>
+          </div>
+
+          <!-- Filter: City -->
+          <div class="select-wrapper">
+            <label for="filterCity" class="sr-only">Ciudad</label>
+            <select id="filterCity">
+              <option value="">📍 Todas las ciudades</option>
+            </select>
+          </div>
+
+          <!-- Filter: Category -->
+          <div class="select-wrapper">
+            <label for="filterCategory" class="sr-only">Categoría</label>
+            <select id="filterCategory">
+              <option value="">🏷️ Todas las categorías</option>
+              <option value="Sostenibilidad">🌱 Sostenibilidad</option>
+              <option value="Salud">🏥 Salud</option>
+              <option value="Comercio">🛍️ Comercio</option>
+              <option value="Movilidad">🚗 Movilidad</option>
+              <option value="Educación">📚 Educación</option>
+              <option value="Finanzas">💳 Finanzas</option>
+              <option value="Turismo">✈️ Turismo</option>
+              <option value="Logística">📦 Logística</option>
+              <option value="Gobierno / Ciudad">🏛️ Gobierno / Ciudad</option>
+              <option value="Otro">💡 Otro</option>
+            </select>
+          </div>
+
+          <!-- Sort -->
+          <div class="select-wrapper">
+            <label for="sortBy" class="sr-only">Ordenar</label>
+            <select id="sortBy">
+              <option value="recent">⏱️ Más recientes</option>
+              <option value="likes">🔥 Más valoradas (Likes)</option>
+              <option value="potential">⚡ Mayor potencial</option>
+            </select>
+          </div>
+
+          <button id="btnResetFilters" class="btn btn-secondary btn-icon-only" title="Restablecer filtros">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="23 4 23 10 17 10"></polyline>
+              <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+            </svg>
+          </button>
+        </div>
+      </section>
+
+      <!-- Active Filters Summary & Realtime sync badge -->
+      <div class="results-meta">
+        <div class="results-count">
+          Mostrando <strong id="visibleCount">0</strong> oportunidades públicas
+        </div>
+        <div class="realtime-status" id="realtimeStatus" title="Sincronización en tiempo real activa">
+          <span class="status-dot"></span>
+          <span>Sincronizado con Supabase</span>
+        </div>
+      </div>
+
+      <!-- Opportunities Grid -->
+      <section class="opportunities-grid" id="opportunitiesGrid" aria-live="polite">
+        <!-- Cards will be dynamically rendered here -->
+      </section>
+
+      <!-- Empty State -->
+      <div id="emptyState" class="empty-state" style="display: none;">
+        <div class="empty-icon">🔍</div>
+        <h3>No se encontraron oportunidades</h3>
+        <p>No hay registros que coincidan con los filtros seleccionados. Prueba a cambiarlos o publica tú la primera en esta categoría.</p>
+        <button id="btnEmptyReset" class="btn btn-secondary">Limpiar filtros</button>
+      </div>
+
+      <!-- Loading State -->
+      <div id="loadingState" class="loading-state">
+        <div class="spinner"></div>
+        <p>Cargando oportunidades desde Supabase...</p>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+      <div class="container footer-content">
+        <p><strong>Mapa de Oportunidades con IA</strong> • Base de datos pública conectada a Supabase.</p>
+        <p class="footer-subtext">Cualquier persona puede publicar y votar libremente en tiempo real.</p>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Modal: Publicar Oportunidad -->
+  <div id="opportunityModal" class="modal-backdrop" aria-hidden="true" role="dialog" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title-wrap">
+          <div class="modal-badge">Supabase DB</div>
+          <h2 id="modalTitle">Publicar Nueva Oportunidad con IA</h2>
+        </div>
+        <button id="btnCloseModal" class="modal-close" aria-label="Cerrar modal">&times;</button>
+      </div>
+
+      <form id="opportunityForm" class="opportunity-form" novalidate>
+        <div class="form-group">
+          <label for="inputName">Nombre de la oportunidad o proyecto <span class="required">*</span></label>
+          <input 
+            type="text" 
+            id="inputName" 
+            name="name" 
+            placeholder="Ej: Detección Temprana de Fugas de Agua en Red Urbana" 
+            required
+            maxlength="120"
+          >
+          <span class="field-hint">Un título conciso y llamativo para la idea.</span>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="inputCity">Ciudad <span class="required">*</span></label>
+            <input 
+              type="text" 
+              id="inputCity" 
+              name="city" 
+              placeholder="Ej: Valencia" 
+              required
+              maxlength="60"
+            >
+          </div>
+          <div class="form-group col-6">
+            <label for="inputCountry">País <span class="required">*</span></label>
+            <input 
+              type="text" 
+              id="inputCountry" 
+              name="country" 
+              placeholder="Ej: España" 
+              required
+              maxlength="60"
+            >
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group col-6">
+            <label for="inputCategory">Categoría <span class="required">*</span></label>
+            <select id="inputCategory" name="category" required>
+              <option value="" disabled selected>Selecciona categoría...</option>
+              <option value="Sostenibilidad">🌱 Sostenibilidad y Medio Ambiente</option>
+              <option value="Salud">🏥 Salud y Bienestar</option>
+              <option value="Comercio">🛍️ Comercio y Pymes</option>
+              <option value="Movilidad">🚗 Movilidad y Transporte</option>
+              <option value="Educación">📚 Educación y Talento</option>
+              <option value="Finanzas">💳 Finanzas y Fintech</option>
+              <option value="Turismo">✈️ Turismo y Hostelería</option>
+              <option value="Logística">📦 Logística y Envíos</option>
+              <option value="Gobierno / Ciudad">🏛️ Gobierno / Smart City</option>
+              <option value="Otro">💡 Otro sector</option>
+            </select>
+          </div>
+
+          <div class="form-group col-6">
+            <label for="inputPotential">Potencial de Negocio <span class="required">*</span></label>
+            <select id="inputPotential" name="potential" required>
+              <option value="Alto" selected>🔥 Alto (Gran mercado / Urgencia)</option>
+              <option value="Medio">⚡ Medio (Mercado estable / Nicho)</option>
+              <option value="Bajo">🌱 Bajo / Experimental</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="inputProblem">Problema o Necesidad Detectada <span class="required">*</span></label>
+          <textarea 
+            id="inputProblem" 
+            name="problem" 
+            rows="3" 
+            placeholder="¿Qué problema real existe en esta ciudad? ¿A quién afecta y qué coste o ineficiencia genera?" 
+            required
+            maxlength="800"
+          ></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="inputAiSolution">Solución con Inteligencia Artificial <span class="required">*</span></label>
+          <textarea 
+            id="inputAiSolution" 
+            name="ai_solution" 
+            rows="3" 
+            placeholder="¿Cómo la IA (visión computacional, LLMs, modelos predictivos, agentes) resuelve este problema de forma viable?" 
+            required
+            maxlength="800"
+          ></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" id="btnCancelModal" class="btn btn-secondary">Cancelar</button>
+          <button type="submit" id="btnSubmitOpportunity" class="btn btn-primary">
+            <span class="btn-text">Publicar en la Red Pública</span>
+            <span class="btn-spinner" style="display: none;"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container" aria-live="assertive"></div>
+
+  <!-- JS Logic -->
+  <script src="app.js?v=2"></script>
+</body>
+</html>
